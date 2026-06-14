@@ -5,6 +5,7 @@ const BG_COLOR = 'BLACK';
 const viewport = document.querySelector('#viewport');
 viewport.width = 800;
 viewport.height = 800;
+viewport.style.touchAction = "none";
 
 const ctx = viewport.getContext('2d');
 
@@ -20,8 +21,8 @@ function drawBody(body) {
   ctx.fillStyle = body.color;
   ctx.beginPath();
   ctx.arc(
-    body.pos.x - camera.x, 
-    body.pos.y - camera.y, 
+    body.pos.x, // - camera.x, 
+    body.pos.y, // - camera.y, 
     body.r, 
     0, 
     2 *Math.PI
@@ -106,22 +107,25 @@ function update(dt) {
 
 function render() {
   clearViewport();
+  ctx.save();
+  ctx.translate(-camera.x, -camera.y);
   bodies.forEach(body => {
     drawBody(body);
     if (velocityLines) drawVelocityLine(body);
   });
+  ctx.restore();
 }
 
 let dragging = false;
 let lastMouse = {x:0, y:0};
 
-viewport.addEventListener('mousedown', (e) => {
+viewport.addEventListener('pointerdown', (e) => {
   dragging = true;
   lastMouse.x = e.clientX;
   lastMouse.y = e.clientY;
   console.log(e);
 });
-viewport.addEventListener('mousemove', (e) => {
+viewport.addEventListener('pointermove', (e) => {
   if (!dragging) return;
 
   const dx = e.clientX - lastMouse.x;
@@ -133,10 +137,10 @@ viewport.addEventListener('mousemove', (e) => {
   lastMouse.x = e.clientX;
   lastMouse.y = e.clientY;
 });
-viewport.addEventListener('mouseup', () =>  {
+viewport.addEventListener('pointerup', () =>  {
   dragging = false;
 });
-viewport.addEventListener('mouseleave', () => {
+viewport.addEventListener('pointercanvel', () => {
   dragging = false;
 });
 
