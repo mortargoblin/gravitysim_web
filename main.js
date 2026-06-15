@@ -190,6 +190,10 @@ document.querySelector('#vel-btn').addEventListener('click', () => {
   velocityLines = !velocityLines;
 });
 
+document.querySelector('#refresh-btn').addEventListener('click', () => {
+  window.location.reload()
+});
+
 document.querySelector('#spawn-btn').addEventListener('click', spawnBody);
 
 window.addEventListener("resize", resizeCanvas);
