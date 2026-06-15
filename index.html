@@ -2,16 +2,27 @@
 
 <html lang=en>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
   <script src="main.js" defer></script>
   <style>
     body {
-      background-color: #12141B;
       text-align: center;
+      margin: 0px;
     }
     #viewport {
       display: block;
-      margin: auto;
       touch-action: none;
+    }
+    #buttons {
+      position: absolute;
+      top: 30px;
+      left: 30px;
+      gap: 30px;
+    }
+    #buttons > button {
+    }
+    #spawn-btn {
+      display: none;
     }
   </style>
 </head>
@@ -19,7 +30,10 @@
 <body>
   <div id="container">
     <canvas id="viewport"></canvas>
-    <button id="vel-btn">velocity lines</button>
+    <div id="buttons">
+      <button id="vel-btn">velocity lines</button> <br>
+      <button id="spawn-btn">spawn planet</button>
+    </div>
   </div>
 </body>
 </html>

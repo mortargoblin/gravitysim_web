@@ -1,6 +1,6 @@
 // js implementation of a gravity simulation by mortargoblin
 
-const BG_COLOR = 'BLACK';
+const BG_COLOR = 'black'; // '#12141B';
 
 const viewport = document.querySelector('#viewport');
 viewport.width = 800;
@@ -9,13 +9,24 @@ viewport.style.touchAction = "none";
 
 const ctx = viewport.getContext('2d');
 
+const G = 50;
+
 let bodies = [
   { r: 20, mass: 10000, pos: {x:400, y:400}, vel: {x:0, y:0}, color: 'yellow' },
-  { r: 10, mass: 10, pos: {x:400, y: 200}, vel: {x:6, y:0}, color: 'red' },
-  { r: 10, mass: 20, pos: {x:400, y:600}, vel: {x:-5, y:0}, color: 'green' }
+  { r: 8, mass: 15, pos: {x:400, y: 250}, vel: {x:6, y:0}, color: 'red' },
+  { r: 10, mass: 20, pos: {x:400, y:600}, vel: {x:-5, y:0}, color: 'green' },
+  { r: 15, mass: 200, pos: {x:50, y:400}, vel: {x:0, y:-5}, color: 'blue' },
+  { r: 3, mass: 10, pos: {x:50, y:425}, vel: {x:-2.5, y:-5}, color: 'purple' },
+  { r: 5, mass: 20, pos: {x:800, y:400}, vel: {x:0, y:5}, color: 'brown' }
 ];
 
 const camera = { x: 0, y: 0 };
+
+function resizeCanvas() {
+  viewport.width = window.innerWidth;
+  viewport.height = window.innerHeight;
+  console.log(viewport.width, viewport.height);
+}
 
 function drawBody(body) {
   ctx.fillStyle = body.color;
@@ -72,7 +83,6 @@ function applyGravity(b1, b2, dt) {
   dir.x /= dist;
   dir.y /= dist;
 
-  G = 50;
   accelMag = G * b2.mass / distSq;
   accel = {x: dir.x * accelMag, y: dir.y * accelMag};
 
@@ -90,6 +100,38 @@ function drawVelocityLine(body) {
   ctx.lineTo(x, y);
   ctx.lineWidth = 3;
   ctx.stroke();
+}
+
+function randInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
+function spawnBody() {
+  const sun = bodies[0];
+  const size = randInt(13) + 2;
+  const mass = size * 10;
+  const r = randInt(600) + 100;
+  const theta = Math.random() * Math.PI * 2;
+  const speed = Math.sqrt(G * sun.mass / r);
+  const x = Math.cos(theta) * r;
+  const y = Math.sin(theta) * r;
+  const rx = x;
+  const ry = y;
+  const px = -ry;
+  const py = rx;
+  const len = Math.hypot(px, py);
+  const vx = px / len * speed;
+  const vy = py / len * speed;
+
+  const newBody = {
+    r: size,
+    mass: mass, 
+    pos: {x:x, y:y}, 
+    vel: {x:vx, y:vy}, 
+    color: `rgb(${randInt(255)}, ${randInt(255)}, ${randInt(255)})`
+  };
+  console.log(newBody);
+  bodies.push(newBody);
 }
 
 function update(dt) {
@@ -123,7 +165,6 @@ viewport.addEventListener('pointerdown', (e) => {
   dragging = true;
   lastMouse.x = e.clientX;
   lastMouse.y = e.clientY;
-  console.log(e);
 });
 viewport.addEventListener('pointermove', (e) => {
   if (!dragging) return;
@@ -148,6 +189,12 @@ let velocityLines = false;
 document.querySelector('#vel-btn').addEventListener('click', () => {
   velocityLines = !velocityLines;
 });
+
+document.querySelector('#spawn-btn').addEventListener('click', spawnBody);
+
+window.addEventListener("resize", resizeCanvas);
+
+resizeCanvas();
 
 let lastTime = 0;
 function frame(time) {
