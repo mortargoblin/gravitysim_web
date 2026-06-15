@@ -108,28 +108,45 @@ function randInt(max) {
 
 function spawnBody() {
   const sun = bodies[0];
+
   const size = randInt(13) + 2;
   const mass = size * 10;
+
   const r = randInt(600) + 100;
+
   const theta = Math.random() * Math.PI * 2;
-  const speed = Math.sqrt(G * sun.mass / r);
-  const x = Math.cos(theta) * r;
-  const y = Math.sin(theta) * r;
-  const rx = x;
-  const ry = y;
-  const px = -ry;
-  const py = rx;
+
+  // Position relative to sun
+  const dx = Math.cos(theta) * r;
+  const dy = Math.sin(theta) * r;
+
+  // World position
+  const x = sun.pos.x + dx;
+  const y = sun.pos.y + dy;
+
+  const speed = Math.sqrt(sun.mass / r);
+
+  // Tangential direction
+  const px = -dy;
+  const py = dx;
+
   const len = Math.hypot(px, py);
-  const vx = px / len * speed;
-  const vy = py / len * speed;
+
+  // Orbital velocity relative to sun
+  const orbitalVx = px / len * speed;
+  const orbitalVy = py / len * speed;
 
   const newBody = {
     r: size,
-    mass: mass, 
-    pos: {x:x, y:y}, 
-    vel: {x:vx, y:vy}, 
+    mass: mass,
+    pos: { x, y },
+    vel: {
+      x: sun.vel.x + orbitalVx,
+      y: sun.vel.y + orbitalVy
+    },
     color: `rgb(${randInt(255)}, ${randInt(255)}, ${randInt(255)})`
   };
+
   console.log(newBody);
   bodies.push(newBody);
 }
