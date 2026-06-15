@@ -98,7 +98,7 @@ function drawVelocityLine(body) {
   ctx.beginPath();
   ctx.moveTo(body.pos.x, body.pos.y);
   ctx.lineTo(x, y);
-  ctx.lineWidth = 3;
+  // ctx.lineWidth = 3;
   ctx.stroke();
 }
 
@@ -107,6 +107,7 @@ function randInt(max) {
 }
 
 function spawnBody() {
+  // MATH IS HARD
   const sun = bodies[0];
 
   const size = randInt(13) + 2;
@@ -116,23 +117,23 @@ function spawnBody() {
 
   const theta = Math.random() * Math.PI * 2;
 
-  // Position relative to sun
+  // position relative to sun
   const dx = Math.cos(theta) * r;
   const dy = Math.sin(theta) * r;
 
-  // World position
+  // world position
   const x = sun.pos.x + dx;
   const y = sun.pos.y + dy;
 
   const speed = Math.sqrt(sun.mass / r);
 
-  // Tangential direction
+  // tangential direction
   const px = -dy;
   const py = dx;
 
   const len = Math.hypot(px, py);
 
-  // Orbital velocity relative to sun
+  // orbital velocity relative to sun
   const orbitalVx = px / len * speed;
   const orbitalVy = py / len * speed;
 
